@@ -95,32 +95,6 @@ TEST_CASE("Removing elements that do not exist")
     CHECK_THROWS(container.removeElement(2));
 }
 
-// TEST_CASE("Illegal use of operators")
-// {
-//     MagicalContainer container = createTestContainer();
-//     MagicalContainer::AscendingIterator ascIter(container);
-//     MagicalContainer::SideCrossIterator crossIter(container);
-//     MagicalContainer::PrimeIterator primeIter(container);
-
-//     SUBCASE("Operators for iterators of different types")
-//     {
-//         CHECK_THROWS(*ascIter.begin() < *crossIter.begin());
-//         CHECK_THROWS(*ascIter.begin() > *crossIter.begin());
-//         CHECK_THROWS(*ascIter.begin() == *primeIter.begin());
-//         CHECK_THROWS(*crossIter.begin() != *primeIter.begin());
-//     }
-
-//     SUBCASE("Identical iterators containing different containers")
-//     {
-//         MagicalContainer container_2 = createTestContainer();
-//         MagicalContainer::AscendingIterator ascIter_2(container_2);
-//         auto it = ascIter_2.begin();
-//         CHECK_THROWS(*ascIter.begin() == *it);
-//         CHECK_THROWS(*ascIter.begin() < *++it);
-//         CHECK_THROWS(*ascIter.begin() != *it);
-//     }
-// }
-
 TEST_CASE("Checking operators")
 {
     MagicalContainer container = createTestContainer();
@@ -160,5 +134,37 @@ TEST_CASE("Checking operators")
         CHECK(*++it_1 == *it_2);    // 3 == 3
         CHECK(*++it_1 > *it_2);     // 17 > 3
         CHECK(*it_1 != *it_2);      // 17 != 3
+    }
+}
+
+TEST_CASE("Advancing the iterator past end()")
+{
+    MagicalContainer container = createTestContainer();
+    MagicalContainer::AscendingIterator ascIter(container);
+    MagicalContainer::SideCrossIterator crossIter(container);
+    MagicalContainer::PrimeIterator primeIter(container);
+
+    SUBCASE("AscendingIterator")
+    {
+        auto it_A = ascIter.begin();
+        while(it_A != ascIter.end())
+            ++it_A;
+        CHECK_THROWS(++it_A);
+    }
+
+    SUBCASE("SideCrossIterator")
+    {
+        auto it_C = crossIter.begin();
+        while(it_C != crossIter.end())
+            ++it_C;
+        CHECK_THROWS(++it_C);
+    }
+
+    SUBCASE("PrimeIterator")
+    {
+        auto it_P = primeIter.begin();
+        while(it_P != primeIter.end())
+            ++it_P;
+        CHECK_THROWS(++it_P);
     }
 }
